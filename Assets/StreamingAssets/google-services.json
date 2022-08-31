@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "73572080701",
+    "project_id": "authenticationanddatabas-d8de1",
+    "storage_bucket": "authenticationanddatabas-d8de1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:73572080701:android:efc6d42336aa66d0a65e54",
+        "android_client_info": {
+          "package_name": "com.Actimi.FirebaseAuthentication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "73572080701-r75hjoton3644h1dkt7ktcnc5u82gh0h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAx1GytkTD59TvJdYkG4hs1YGV6aCsXa20"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "73572080701-r75hjoton3644h1dkt7ktcnc5u82gh0h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
