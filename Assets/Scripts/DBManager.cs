@@ -15,8 +15,14 @@ public class DBManager : MonoBehaviour
     public TMP_InputField userNameInput, passwordInput, ageInput;
     public Toggle maleTogle, famaleTogle;
 
+    public TextMeshProUGUI confirmText;
+    public TextMeshProUGUI warningText;
 
 
+    private void Awake()
+    {
+        Firebase.FirebaseApp.Create();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -27,13 +33,14 @@ public class DBManager : MonoBehaviour
 
     private IEnumerator Initilization()
     {
-
+        confirmText.text = "Init Baslangic";
         var task = FirebaseApp.CheckAndFixDependenciesAsync();
+        confirmText.text = "After Task";
         while (!task.IsCompleted)
         {
             yield return null;
         }
-
+        confirmText.text = "After While";
         if (task.IsCanceled || task.IsFaulted)
         {
             Debug.LogError("Databas Error: " + task.Exception);
@@ -46,10 +53,12 @@ public class DBManager : MonoBehaviour
         {
             userRef = FirebaseDatabase.DefaultInstance.GetReference("Users");
             Debug.Log("init complated");
+            confirmText.text = "init complated";
         }
         else
         {
             Debug.LogError("Database Error: ");
+            confirmText.text = "Database Error: ";
         }
     }
 
@@ -82,7 +91,7 @@ public class DBManager : MonoBehaviour
         user["hashPassword"] = hashPassword;
         user["age"] = age;
         user["gender"] = gender;
-
+        confirmText.text = "AFTER DICTIONARY ";
 
         string key = userRef.Push().Key;
 
