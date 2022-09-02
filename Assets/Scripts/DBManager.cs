@@ -18,10 +18,11 @@ public class DBManager : MonoBehaviour
     public TextMeshProUGUI confirmText;
     public TextMeshProUGUI warningText;
 
-
+    [SerializeField] TextMeshProUGUI userData;
+    private string key;
     private void Awake()
     {
-        Firebase.FirebaseApp.Create();
+        Firebase.FirebaseApp.Create();                      // For Android APK
     }
     // Start is called before the first frame update
     void Start()
@@ -94,8 +95,11 @@ public class DBManager : MonoBehaviour
         confirmText.text = "AFTER DICTIONARY ";
 
         string key = userRef.Push().Key;
+        this.key = key;
 
         userRef.Child(key).UpdateChildrenAsync(user);
+
+        
     }
 
     public void GetData()
@@ -106,7 +110,8 @@ public class DBManager : MonoBehaviour
 
     public IEnumerator GetUserData()
     {
-        string name = userNameInput.text;
+        //string name = userNameInput.text;
+        string name = key;
 
         var task = userRef.Child(name).GetValueAsync();
         while (!task.IsCompleted)
@@ -116,29 +121,31 @@ public class DBManager : MonoBehaviour
 
         if (task.IsCanceled || task.IsFaulted)
         {
+
             Debug.LogError("Databas Error: " + task.Exception);
             yield break;
         }
-
         DataSnapshot snapshot = task.Result;
 
         foreach (DataSnapshot user in snapshot.Children)
         {
-            if (user.Key == "password")
-            {
-                Debug.Log("Password: " + user.Value.ToString());
-
-            }
-
             if (user.Key == "username")
             {
                 Debug.Log("Username: " + user.Value.ToString());
+                userData.text += "\nUsername: " + user.Value.ToString();
+
+            }
+
+            if (user.Key == "password")
+            {
+                Debug.Log("Password: " + user.Value.ToString());
+                userData.text = "\nPassword: " + user.Value.ToString();
 
             }
         }
     }
 
-    #region HADING AND SALTING
+    #region HASHING AND SALTING
     private string PasswordSalt
     {
         get

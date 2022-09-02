@@ -28,6 +28,12 @@ public class AuthenticationManager : MonoBehaviour
     public TMP_InputField passwordRegisterVerifyField;
     public TMP_Text warningRegisterText;
 
+    //Panel Objects
+    [Header("Panels")]
+    [SerializeField] private GameObject loginPanel;
+    [SerializeField] private GameObject registerPanel;
+    [SerializeField] private GameObject menuPanel;
+
     void Awake()
     {
         //Check that all of the necessary dependencies for Firebase are present on the system
@@ -109,6 +115,9 @@ public class AuthenticationManager : MonoBehaviour
             Debug.LogFormat("User signed in successfully: {0} ({1})", User.DisplayName, User.Email);
             warningLoginText.text = "";
             confirmLoginText.text = "Logged In";
+
+            loginPanel.SetActive(false);
+            menuPanel.SetActive(true);
         }
     }
 
@@ -184,7 +193,9 @@ public class AuthenticationManager : MonoBehaviour
                     {
                         //Username is now set
                         //Now return to login screen
-                        warningRegisterText.text = "LOGIN'e DON";
+                        warningRegisterText.text = "Back to LOGIN Page";
+                        registerPanel.SetActive(false);
+                        loginPanel.SetActive(true);
                     }
                 }
             }
