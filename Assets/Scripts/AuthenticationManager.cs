@@ -34,6 +34,8 @@ public class AuthenticationManager : MonoBehaviour
     [SerializeField] private GameObject registerPanel;
     [SerializeField] private GameObject menuPanel;
 
+    public static string UID;
+
     void Awake()
     {
         //Check that all of the necessary dependencies for Firebase are present on the system
@@ -76,6 +78,8 @@ public class AuthenticationManager : MonoBehaviour
     {
         //Call the Firebase auth signin function passing the email and password
         var LoginTask = auth.SignInWithEmailAndPasswordAsync(_email, _password);
+
+        
         //Wait until the task completes
         yield return new WaitUntil(predicate: () => LoginTask.IsCompleted);
 
@@ -110,6 +114,8 @@ public class AuthenticationManager : MonoBehaviour
         else
         {
             //User is now logged in
+            Debug.Log("USER IDDD:" +LoginTask.Result.UserId);
+            UID = LoginTask.Result.UserId;
             //Now get the result
             User = LoginTask.Result;
             Debug.LogFormat("User signed in successfully: {0} ({1})", User.DisplayName, User.Email);
@@ -137,8 +143,11 @@ public class AuthenticationManager : MonoBehaviour
         {
             //Call the Firebase auth signin function passing the email and password
             var RegisterTask = auth.CreateUserWithEmailAndPasswordAsync(_email, _password);
+            
             //Wait until the task completes
             yield return new WaitUntil(predicate: () => RegisterTask.IsCompleted);
+
+
 
             if (RegisterTask.Exception != null)
             {
@@ -168,6 +177,8 @@ public class AuthenticationManager : MonoBehaviour
             else
             {
                 //User has now been created
+
+                Debug.Log("---------------" +RegisterTask.Result.UserId);
                 //Now get the result
                 User = RegisterTask.Result;
 

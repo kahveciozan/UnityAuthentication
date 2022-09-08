@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Firebase;
 using Firebase.Database;
+using Firebase.Auth;
 using UnityEngine.UI;
 using System.Security.Cryptography;
 using System;
@@ -20,6 +21,8 @@ public class DBManager : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI userData;
     private string key;
+
+
     private void Awake()
     {
         Firebase.FirebaseApp.Create();                      // For Android APK
@@ -27,7 +30,7 @@ public class DBManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(Initilization());
+        
 
     }
 
@@ -35,24 +38,24 @@ public class DBManager : MonoBehaviour
     private IEnumerator Initilization()
     {
         confirmText.text = "Init Baslangic";
-        var task = FirebaseApp.CheckAndFixDependenciesAsync();
+        var myTask = FirebaseApp.CheckAndFixDependenciesAsync();
         confirmText.text = "After Task";
-        while (!task.IsCompleted)
+        while (!myTask.IsCompleted)
         {
             yield return null;
         }
         confirmText.text = "After While";
-        if (task.IsCanceled || task.IsFaulted)
+        if (myTask.IsCanceled || myTask.IsFaulted)
         {
-            Debug.LogError("Databas Error: " + task.Exception);
+            Debug.LogError("Databas Error: " + myTask.Exception);
         }
 
 
-        var dependencyStatus = task.Result;
+        var dependencyStatus = myTask.Result;
 
         if (dependencyStatus == DependencyStatus.Available)
         {
-            userRef = FirebaseDatabase.DefaultInstance.GetReference("Users");
+            userRef = FirebaseDatabase.DefaultInstance.GetReference("Users/" + FirebaseAuth.DefaultInstance.CurrentUser.UserId);
             Debug.Log("init complated");
             confirmText.text = "init complated";
         }
@@ -67,6 +70,20 @@ public class DBManager : MonoBehaviour
 
     public void SaveUser()
     {
+
+
+        StartCoroutine(SaveUnurIE());
+        
+    }
+
+    IEnumerator SaveUnurIE()
+    {
+        yield return new WaitForSeconds(5f);
+
+        StartCoroutine(Initilization());
+
+        yield return new WaitForSeconds(5f);
+
         string username = userNameInput.text;
         string password = passwordInput.text;
         string hashPassword;
@@ -94,12 +111,11 @@ public class DBManager : MonoBehaviour
         user["gender"] = gender;
         confirmText.text = "AFTER DICTIONARY ";
 
-        string key = userRef.Push().Key;
-        this.key = key;
+        //string key = userRef.Push().Key;
+        //this.key = key;
 
-        userRef.Child(key).UpdateChildrenAsync(user);
-
-        
+        //userRef.Child(FirebaseAuth.DefaultInstance.CurrentUser.UserId).UpdateChildrenAsync(user);
+        userRef.UpdateChildrenAsync(user);
     }
 
     public void GetData()
